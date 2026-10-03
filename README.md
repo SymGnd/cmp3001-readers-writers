@@ -25,7 +25,3 @@ java -cp out ReadWriteLockTest
 ```
 
 It runs indefinitely (readers and writers loop forever), so stop it manually once you've seen enough interleaved output.
-
-## Note
-
-The original project folder for this was lost — this source was recovered from the submitted project report (`CMP3001 Operating Systems Project Report.docx`), which included the full code listing.
