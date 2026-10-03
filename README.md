@@ -25,3 +25,12 @@ java -cp out ReadWriteLockTest
 ```
 
 It runs indefinitely (readers and writers loop forever), so stop it manually once you've seen enough interleaved output.
+
+## Known limitations
+
+This is the classic textbook solution, so it inherits the classic textbook problems:
+
+- **Writer starvation.** Since any new reader can join in as long as at least one reader already holds `S`, a steady stream of readers can keep a waiting writer blocked indefinitely. A fairer version would need something like a ticket/turnstile semaphore so writers get queued in order instead of being shut out by readers.
+- **`readers` isn't thread-safe on its own** — it's a plain `int`, and the only reason the increment/decrement in `readLock`/`readUnLock` is safe is that it's always done while holding `mutex`. That's correct here, but it's easy to break by accident if someone touches `readers` outside that lock later.
+- **No clean shutdown.** `Writer`/`Reader` loop with `while (true)`, so `executorService.shutdown()` doesn't actually stop the already-running tasks — it just stops accepting new ones. Fine for a short demo, not fine for anything long-running.
+- **Fixed thread counts.** 4 readers and 4 writers are hardcoded in `main`; there's no way to configure this without editing the source.
